@@ -1,0 +1,1558 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>SK Machines</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<style>
+:root{
+  --red:#C0392B;--red2:#E8251A;--red-glow:rgba(192,57,43,0.15);--red-light:rgba(232,37,26,0.08);
+  --bg:#F2F2F7;--bg2:#fff;--bg3:#F9F9FB;--border:rgba(0,0,0,0.08);
+  --text:#1C1C1E;--text2:#3A3A3C;--text3:#636366;--text4:#AEAEB2;
+  --green:#27AE60;--green-bg:rgba(39,174,96,0.10);
+  --orange:#E67E22;--orange-bg:rgba(230,126,34,0.10);
+  --blue:#2980B9;--blue-bg:rgba(41,128,185,0.10);
+  --shadow:0 2px 16px rgba(0,0,0,0.07);
+  --rm:14px;--rl:20px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:-apple-system,'Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overscroll-behavior-y:none;}
+#root{min-height:100vh;}
+/* Splash */
+.splash{position:fixed;inset:0;background:linear-gradient(160deg,#1a0000,#6B0000,#C0392B);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;}
+.splash-logo{width:90px;height:90px;background:rgba(255,255,255,0.12);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:42px;margin-bottom:18px;border:1px solid rgba(255,255,255,0.2);}
+.splash-title{color:#fff;font-size:26px;font-weight:700;}
+.splash-sub{color:rgba(255,255,255,0.5);font-size:14px;margin-top:5px;}
+.splash-welcome{color:#fff;font-size:22px;font-weight:900;text-align:center;line-height:1.35;max-width:720px;padding:0 24px;margin-top:22px;text-transform:uppercase;animation:blink 1.2s infinite;}
+.splash-conf{color:rgba(255,150,150,0.8);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:12px;animation:blink 1.5s infinite;}
+/* Login */
+.login-wrap{position:fixed;inset:0;background:linear-gradient(160deg,#1a0000,#6B0000,#C0392B);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.login-brand{text-align:center;margin-bottom:28px;}
+.login-logo{width:72px;height:72px;background:rgba(255,255,255,0.12);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:32px;border:1px solid rgba(255,255,255,0.18);}
+.login-brand h1{color:#fff;font-size:24px;font-weight:700;}
+.login-brand p{color:rgba(255,150,150,0.8);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:4px;animation:blink 1.5s infinite;}
+.login-card{width:100%;max-width:360px;background:rgba(255,255,255,0.08);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.14);border-radius:22px;padding:26px 22px;}
+.login-card h2{color:#fff;font-size:18px;font-weight:600;margin-bottom:4px;}
+.login-card p{color:rgba(255,255,255,0.45);font-size:13px;margin-bottom:18px;}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;background:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;color:#333;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.google-btn:active{transform:scale(0.97);}
+.login-msg{border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:14px;}
+.login-msg.error{background:rgba(255,59,48,0.20);color:#FF6B61;border:1px solid rgba(255,59,48,0.25);}
+.login-msg.info{background:rgba(0,122,255,0.20);color:#64B5F6;border:1px solid rgba(0,122,255,0.25);}
+/* Setup */
+.setup-wrap{position:fixed;inset:0;background:var(--bg);overflow-y:auto;z-index:99;}
+.setup-header{background:linear-gradient(135deg,var(--red),var(--red2));padding:calc(var(--safe-top) + 20px) 20px 24px;color:#fff;}
+.setup-header h2{font-size:22px;font-weight:700;}
+.setup-header p{font-size:13px;opacity:0.75;margin-top:4px;}
+.setup-body{padding:18px;max-width:480px;margin:auto;padding-bottom:40px;}
+.form-section{margin-bottom:22px;}
+.form-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:7px;padding:0 2px;}
+.form-group{background:var(--bg2);border-radius:var(--rm);overflow:hidden;box-shadow:var(--shadow);}
+.form-row{display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--border);min-height:50px;}
+.form-row:last-child{border-bottom:none;}
+.form-row .icon{font-size:14px;margin-right:10px;}
+.form-row label{font-size:12px;color:var(--text3);width:100px;flex-shrink:0;}
+.form-row input,.form-row select,.form-row textarea{flex:1;border:none;outline:none;background:none;font-size:14px;color:var(--text);padding:13px 0;text-align:right;font-family:inherit;}
+.form-row select{-webkit-appearance:none;}
+.form-row input::placeholder,.form-row textarea::placeholder{color:var(--text4);}
+.form-row textarea{resize:none;text-align:left;padding:12px 0;}
+/* Main App */
+.main-wrap{min-height:100vh;padding-bottom:calc(68px + var(--safe-bot));}
+.navbar{position:sticky;top:0;z-index:90;background:rgba(192,57,43,0.96);backdrop-filter:blur(20px);padding:calc(var(--safe-top) + 10px) 16px 12px;display:flex;align-items:center;justify-content:space-between;}
+.navbar h1{color:#fff;font-size:16px;font-weight:700;}
+.navbar-conf{color:rgba(255,180,180,0.85);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;animation:blink 1.5s infinite;margin-top:2px;}
+.navbar-meta{display:flex;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap;}
+.header-time{color:rgba(255,255,255,0.82);font-size:12px;font-weight:600;}
+.welcome-flash{background:rgba(255,255,255,0.18);color:#fff;border:1px solid rgba(255,255,255,0.22);border-radius:14px;padding:7px 12px;font-size:13px;font-weight:800;animation:blink 1.5s infinite;}
+.remark-flash{margin-top:5px;display:inline-block;background:rgba(255,255,200,0.12);color:rgba(255,255,200,0.95);border:1px solid rgba(255,255,150,0.22);border-radius:12px;padding:4px 11px;font-size:11px;font-weight:600;max-width:min(300px,72vw);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;animation:rmk-pulse 3s ease-in-out infinite;}
+@keyframes rmk-pulse{0%,100%{opacity:1;}50%{opacity:0.55;}}
+.navbar-right{display:flex;align-items:center;gap:8px;}
+.notif-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:15px;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;}
+.notif-dot{position:absolute;top:3px;right:3px;width:7px;height:7px;background:#FFD60A;border-radius:50%;}
+.logout-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.20);color:#fff;padding:6px 12px;border-radius:16px;font-size:12px;font-weight:500;cursor:pointer;}
+/* Tabs */
+.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:90;background:rgba(255,255,255,0.93);backdrop-filter:blur(24px);border-top:1px solid var(--border);display:flex;padding:6px 0 calc(var(--safe-bot) + 2px);}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:5px 4px;cursor:pointer;border:none;background:none;}
+.tab-item .t-icon{font-size:21px;}
+.tab-item .t-label{font-size:10px;font-weight:500;color:var(--text4);margin-top:2px;}
+.tab-item.active .t-label{color:var(--red);}
+/* Page content */
+.page{padding:14px;}
+/* Cards */
+.card{background:var(--bg2);border-radius:var(--rl);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;}
+.card-header{padding:14px 16px 0;display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:14px;font-weight:600;}
+.card-body{padding:10px 16px 16px;}
+.section-title{font-size:18px;font-weight:700;margin-bottom:12px;}
+.stat-row{display:flex;gap:10px;margin-bottom:12px;}
+.stat-box{flex:1;background:var(--bg2);border-radius:var(--rm);padding:12px;text-align:center;box-shadow:var(--shadow);}
+.stat-box .sn{font-size:19px;font-weight:700;color:var(--red);}
+.stat-box .sl{font-size:11px;color:var(--text4);margin-top:2px;}
+/* Tags */
+.tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:16px;font-size:11px;font-weight:600;}
+.tag-green{background:var(--green-bg);color:var(--green);}
+.tag-red{background:var(--red-light);color:var(--red);}
+.tag-orange{background:var(--orange-bg);color:var(--orange);}
+.tag-blue{background:var(--blue-bg);color:var(--blue);}
+/* Lists */
+.list{background:var(--bg2);border-radius:var(--rm);overflow:hidden;box-shadow:var(--shadow);margin-bottom:12px;}
+.list-row{display:flex;align-items:center;padding:11px 14px;border-bottom:1px solid var(--border);gap:10px;}
+.list-row:last-child{border-bottom:none;}
+.list-icon{font-size:17px;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.list-body{flex:1;}
+.list-title{font-size:14px;font-weight:500;}
+.list-sub{font-size:12px;color:var(--text4);margin-top:1px;}
+/* Buttons */
+.btn{display:block;width:100%;padding:13px;border:none;border-radius:var(--rm);font-size:15px;font-weight:600;cursor:pointer;text-align:center;transition:all 0.18s;font-family:inherit;}
+.btn:active{transform:scale(0.97);}
+.btn-primary{background:var(--red);color:#fff;box-shadow:0 3px 12px var(--red-glow);}
+.btn-primary:disabled{opacity:0.45;}
+.btn-ghost{background:var(--bg);color:var(--red);border:1.5px solid rgba(192,57,43,0.20);}
+.btn-success{background:var(--green-bg);color:var(--green);border:1.5px solid rgba(39,174,96,0.25);}
+.btn-danger{background:var(--red-light);color:var(--red);}
+.btn-sm{padding:6px 12px;font-size:12px;width:auto;display:inline-block;border-radius:8px;}
+/* Alert */
+.alert{border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:10px;}
+.alert-error{background:rgba(255,59,48,0.10);color:#C0392B;border:1px solid rgba(192,57,43,0.15);}
+.alert-success{background:rgba(39,174,96,0.10);color:#27AE60;border:1px solid rgba(39,174,96,0.20);}
+.alert-info{background:rgba(41,128,185,0.10);color:#2980B9;border:1px solid rgba(41,128,185,0.15);}
+/* Empty state */
+.empty{text-align:center;padding:36px 20px;color:var(--text4);}
+.empty .ei{font-size:36px;margin-bottom:8px;opacity:0.4;}
+/* Toast */
+.toast{position:fixed;bottom:calc(76px + var(--safe-bot));left:50%;transform:translateX(-50%) translateY(20px);background:rgba(28,28,30,0.88);backdrop-filter:blur(16px);color:#fff;padding:10px 18px;border-radius:18px;font-size:13px;font-weight:500;white-space:nowrap;z-index:999;opacity:0;transition:all 0.3s;max-width:90vw;text-align:center;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* Notif panel */
+.notif-panel{position:fixed;top:0;right:-100%;width:min(320px,100vw);height:100vh;background:var(--bg2);z-index:150;transition:right 0.3s;box-shadow:-4px 0 30px rgba(0,0,0,0.12);overflow-y:auto;}
+.notif-panel.open{right:0;}
+.notif-head{background:var(--red);color:#fff;padding:calc(var(--safe-top) + 12px) 16px 12px;display:flex;align-items:center;justify-content:space-between;}
+.notif-head h3{font-size:15px;font-weight:700;}
+.notif-close{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;}
+.notif-item{padding:12px 16px;border-bottom:1px solid var(--border);}
+.notif-item .nm{font-size:13px;color:var(--text);line-height:1.5;}
+.notif-item .nt{font-size:11px;color:var(--text4);margin-top:3px;}
+.nov{position:fixed;inset:0;background:rgba(0,0,0,0.25);z-index:149;}
+/* Attendance tiles */
+.att-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.att-tile{background:var(--bg3);border-radius:var(--rm);padding:14px;text-align:center;cursor:pointer;border:1.5px solid var(--border);transition:all 0.2s;}
+.att-tile:active:not(.locked):not(.done){transform:scale(0.95);}
+.att-tile.locked{opacity:0.35;pointer-events:none;}
+.att-tile.done{background:var(--green-bg);border-color:rgba(39,174,96,0.3);pointer-events:none;}
+.att-tile.active-tile{background:var(--red-light);border-color:rgba(192,57,43,0.25);}
+.att-tile .tile-icon{font-size:22px;margin-bottom:6px;}
+.att-tile .tile-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px;}
+.att-tile .tile-time{font-size:18px;font-weight:700;color:var(--text);margin:4px 0;}
+.att-tile.done .tile-time{color:var(--green);}
+.att-tile .tile-hint{font-size:10px;color:var(--text4);}
+/* Spinner */
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:5px;vertical-align:middle;}
+/* Dept/filter chips */
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;}
+.chip{padding:6px 14px;border-radius:16px;font-size:12px;font-weight:600;cursor:pointer;background:var(--bg2);color:var(--text3);border:1.5px solid var(--border);white-space:nowrap;flex-shrink:0;}
+.chip.active{background:var(--red);color:#fff;border-color:var(--red);}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--bg2);border-radius:var(--rl);padding:22px;width:100%;max-width:340px;}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:14px;}
+.inp{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;background:var(--bg);}
+.inp:focus{border-color:var(--red);}
+textarea.inp{resize:none;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+// ── GAS Bridge ───────────────────────────────────────────────
+function gasCall(fn, args, cb, errCb) {
+  if (!window.google || !google.script || !google.script.run) {
+    const msg = 'Open the deployed Apps Script /exec URL. Local HTML file cannot read Google Sheets.';
+    showToast(msg);
+    if (errCb) errCb({ message: msg });
+    return;
+  }
+  var callArgs = args || [];
+  var userScopedFns = ['saveProfile','getMyProfile','savePhoto','getTodayAtt','markIn','markLunchStart','markLunchEnd','markOut','getMyAtt','applyLeave','getMyLeaves','applySalaryRequest','getMySalaryRequests','getMyNotifs','markNotifsRead','clearNewRating','applyAdvance','getMyAdvances'];
+  if (userScopedFns.indexOf(fn) !== -1) {
+    callArgs = [localStorage.getItem('skmEmail') || ''].concat(callArgs);
+  }
+  var call = google.script.run
+    .withSuccessHandler(cb)
+    .withFailureHandler(errCb || function(e){ console.error(e); });
+  call[fn].apply(call, callArgs);
+}
+
+// ── React App ────────────────────────────────────────────────
+const { useState, useEffect, useRef, useCallback } = React;
+
+// ── Toast ────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('globalToast');
+  if (!t) return;
+  t.innerText = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Button tap sound and lightweight app-wide sync events
+let audioCtx;
+function playTapSound() {
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(720, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.09);
+  } catch(e) {}
+}
+function playNotificationSound() {
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    [0, 0.18, 0.36].forEach(function(offset, i) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime([880, 1040, 1320][i], audioCtx.currentTime + offset);
+      gain.gain.setValueAtTime(0.001, audioCtx.currentTime + offset);
+      gain.gain.exponentialRampToValueAtTime(0.22, audioCtx.currentTime + offset + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + offset + 0.16);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + offset);
+      osc.stop(audioCtx.currentTime + offset + 0.18);
+    });
+  } catch(e) {}
+}
+document.addEventListener('click', function(e) {
+  if (e.target.closest('button,.chip,.tab-item,.att-tile,[role="button"]')) playTapSound();
+});
+
+
+// ── Stars Helper ─────────────────────────────────────────────
+function StarsDisplay({ count }) {
+  return React.createElement('span', null,
+    [1,2,3,4,5].map(i =>
+      React.createElement('span', { key:i, style:{ fontSize:'16px', opacity: i <= count ? 1 : 0.2 } }, '⭐')
+    )
+  );
+}
+
+function HeaderClock() {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+  return React.createElement('span', { className:'header-time' },
+    now.toLocaleString('en-IN', { weekday:'short', day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' })
+  );
+}
+
+// ── Attendance Page ──────────────────────────────────────────
+function AttPage({ user }) {
+  const [att, setAtt] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [liveH, setLiveH] = useState('');
+  const [warn, setWarn] = useState('');
+
+  useEffect(() => {
+    loadAtt();
+    const interval = setInterval(() => {
+      setAtt(prev => {
+        if (prev && prev.found && prev.inTime && !prev.outTime) {
+          const [h, m] = prev.inTime.split(':');
+          const start = new Date();
+          start.setHours(parseInt(h), parseInt(m), 0);
+          const hrs = ((new Date() - start) / 3600000).toFixed(2);
+          setLiveH(hrs);
+        }
+        return prev;
+      });
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  function loadAtt() {
+    setLoading(true);
+    gasCall('getTodayAtt', [], (a) => { setAtt(a); setLoading(false); if(a && a.found && a.inTime && !a.outTime){ const [h,m]=a.inTime.split(':');const s=new Date();s.setHours(parseInt(h),parseInt(m),0);setLiveH(((new Date()-s)/3600000).toFixed(2));} }, () => setLoading(false));
+  }
+
+  function doAction(fn) {
+    gasCall(fn, [], (r) => {
+      if (r.success) {
+        showToast(fn==='markIn'?'✅ Checked in at '+r.inTime:fn==='markLunchStart'?'🍽 Lunch started':fn==='markLunchEnd'?'✅ Lunch ended':'👋 Checked out! ₹'+r.salary);
+        if (r.warning) setWarn('⚠️ '+r.warningMsg);
+        loadAtt();
+      } else {
+        showToast('⚠️ '+r.message);
+        if (r.blocked) setWarn(r.message);
+      }
+    }, (e) => showToast('⚠️ '+e.message));
+  }
+
+  const today = new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  const found = att && att.found;
+
+  const tiles = [
+    { id:'in',    icon:'🟢', label:'Check In',    time: found ? att.inTime : null,    hint:'Tap to check in',   fn:'markIn',         done: !!att?.inTime,    locked: false },
+    { id:'ls',    icon:'🍽️', label:'Lunch Start', time: found ? att.lunchStart : null, hint:'After check in',   fn:'markLunchStart', done: !!att?.lunchStart, locked: !att?.inTime },
+    { id:'le',    icon:'✅',  label:'Lunch End',   time: found ? att.lunchEnd : null,   hint:'After lunch start',fn:'markLunchEnd',   done: !!att?.lunchEnd,   locked: !att?.lunchStart },
+    { id:'out',   icon:'🔴', label:'Check Out',   time: found ? att.outTime : null,    hint:'After check in',   fn:'markOut',        done: !!att?.outTime,    locked: !att?.inTime },
+  ];
+
+  return React.createElement('div', { className:'page' },
+    React.createElement('div', { style:{ marginBottom:14 } },
+      React.createElement('div', { className:'section-title' }, 'Today'),
+      React.createElement('div', { style:{ fontSize:13, color:'var(--text3)' } }, today)
+    ),
+    warn && React.createElement('div', { className:'alert alert-error', style:{ marginBottom:12 } }, warn),
+    React.createElement('div', { className:'card', style:{ marginBottom:12 } },
+      React.createElement('div', { className:'card-header' },
+        React.createElement('span', { className:'card-title' }, '⏱ Time Tracking'),
+        React.createElement('span', { className:'tag '+(att?.outTime?'tag-green':att?.inTime?'tag-blue':'tag-red') },
+          att?.outTime ? '✓ Done' : att?.inTime ? '● Working' : 'Not Started'
+        )
+      ),
+      React.createElement('div', { className:'card-body' },
+        loading ? React.createElement('div', { className:'empty' }, React.createElement('div', { className:'ei' }, '⏳'), React.createElement('p', null, 'Loading…')) :
+        React.createElement('div', { className:'att-grid' },
+          tiles.map(tile =>
+            React.createElement('div', {
+              key: tile.id,
+              className: 'att-tile' + (tile.done ? ' done' : tile.locked ? ' locked' : ' active-tile'),
+              onClick: () => { if (!tile.done && !tile.locked) { if(tile.id==='out' && !confirm('Confirm Check Out?')) return; doAction(tile.fn); } }
+            },
+              React.createElement('div', { className:'tile-icon' }, tile.icon),
+              React.createElement('div', { className:'tile-label' }, tile.label),
+              React.createElement('div', { className:'tile-time' }, tile.time || '—:—'),
+              React.createElement('div', { className:'tile-hint' }, tile.done ? tile.time : tile.hint)
+            )
+          )
+        )
+      )
+    ),
+    att?.outTime && React.createElement('div', { className:'card' },
+      React.createElement('div', { className:'card-header' },
+        React.createElement('span', { className:'card-title' }, '📊 Day Summary'),
+        React.createElement('span', { className:'tag tag-green' }, '✓ Complete')
+      ),
+      React.createElement('div', { className:'card-body' },
+        React.createElement('div', { className:'stat-row', style:{ marginTop:6 } },
+          React.createElement('div', { className:'stat-box' }, React.createElement('div', { className:'sn' }, parseFloat(att.workHours||0).toFixed(2)+'h'), React.createElement('div', { className:'sl' }, 'Work Hrs')),
+          React.createElement('div', { className:'stat-box' }, React.createElement('div', { className:'sn', style:{fontSize:'15px'} }, att.salary?'₹'+parseFloat(att.salary).toFixed(2):'—'), React.createElement('div', { className:'sl' }, 'Salary'))
+        )
+      )
+    ),
+    att?.inTime && !att?.outTime && liveH && React.createElement('div', { className:'card' },
+      React.createElement('div', { className:'card-header' }, React.createElement('span', { className:'card-title' }, '🕐 Working')),
+      React.createElement('div', { className:'card-body', style:{ textAlign:'center', paddingTop:8 } },
+        React.createElement('div', { style:{ fontSize:32, fontWeight:700, color:'var(--red)' } }, liveH+'h'),
+        React.createElement('div', { style:{ fontSize:11, color:'var(--text4)', marginTop:4 } }, 'Hours since check in')
+      )
+    )
+  );
+}
+
+// ── Profile Page ─────────────────────────────────────────────
+function ProfPage({ user }) {
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const fileRef = useRef();
+
+  useEffect(() => {
+    loadProf();
+  }, []);
+
+  function loadProf() {
+    setLoading(true);
+    gasCall('getMyProfile', [], (p) => { setProfile(p); setLoading(false); }, () => setLoading(false));
+  }
+
+  function handlePhoto(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 2*1024*1024) { showToast('⚠️ Photo must be under 2MB.'); return; }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const base64 = ev.target.result.split(',')[1];
+      showToast('📤 Uploading…');
+      gasCall('savePhoto', [base64, file.type], (r) => {
+        if (r.success) { showToast('✅ Photo updated!'); loadProf(); }
+        else showToast('⚠️ '+(r.message||'Failed'));
+      }, (e) => showToast('⚠️ '+e.message));
+    };
+    reader.readAsDataURL(file);
+  }
+
+  if (loading) return React.createElement('div', { className:'page empty' }, React.createElement('div', { className:'ei' }, '⏳'), React.createElement('p', null, 'Loading…'));
+  const viewProfile = profile || {
+    Email: user?.email || '',
+    Name: user?.name || (user?.role === 'admin' ? 'Admin' : 'Staff'),
+    Department: user?.department || (user?.role === 'admin' ? 'Admin' : ''),
+    Status: 'Active',
+    Stars: user?.stars || 0,
+    Remarks: user?.remarks || ''
+  };
+
+  const doj = viewProfile['DOJ'] ? new Date(viewProfile['DOJ']).toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' }) : '—';
+  const stars = parseInt(viewProfile['Stars']) || 0;
+
+  return React.createElement('div', { className:'page' },
+    React.createElement('input', { type:'file', ref:fileRef, accept:'image/*', style:{ display:'none' }, onChange:handlePhoto }),
+    React.createElement('div', { className:'section-title' }, 'My Profile'),
+    React.createElement('div', { className:'card', style:{ marginBottom:12 } },
+      React.createElement('div', { style:{ padding:'22px', textAlign:'center' } },
+        React.createElement('div', { style:{ position:'relative', display:'inline-block', marginBottom:10 } },
+          viewProfile['PhotoUrl']
+            ? React.createElement('img', { src:viewProfile['PhotoUrl'], style:{ width:80, height:80, borderRadius:'50%', objectFit:'cover', border:'3px solid var(--red)' } })
+            : React.createElement('div', { style:{ width:80, height:80, borderRadius:'50%', background:'var(--red-light)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:34, margin:'auto' } }, '👤'),
+          React.createElement('div', {
+            onClick: () => fileRef.current.click(),
+            style:{ position:'absolute', bottom:0, right:0, width:24, height:24, background:'var(--red)', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, cursor:'pointer', border:'2px solid #fff' }
+          }, '📷')
+        ),
+        React.createElement('div', { style:{ fontSize:20, fontWeight:700 } }, viewProfile['Name'] || '—'),
+        React.createElement('div', { style:{ fontSize:12, color:'var(--text3)', marginTop:3 } }, viewProfile['Email'] || user.email),
+        React.createElement('div', { style:{ marginTop:8 } },
+          React.createElement('span', { className:'tag '+(viewProfile['Department']==='Production'?'tag-blue':'tag-orange') }, viewProfile['Department'] || '—')
+        ),
+        stars > 0 && React.createElement('div', { style:{ marginTop:10 } },
+          React.createElement(StarsDisplay, { count:stars }),
+          React.createElement('div', { style:{ fontSize:11, color:'var(--text3)', marginTop:3 } }, stars+'/5 — Admin Rating')
+        ),
+        viewProfile['Remarks'] && React.createElement('div', { style:{ marginTop:8, background:'var(--bg3)', borderRadius:10, padding:'8px 12px', fontSize:12, color:'var(--text3)', fontStyle:'italic', textAlign:'left' } },
+          '💬 Admin: ', viewProfile['Remarks']
+        )
+      )
+    ),
+    viewProfile['Phone'] && React.createElement('div', { style:{ display:'flex', gap:10, marginBottom:12 } },
+      React.createElement('a', { href:'tel:'+viewProfile['Phone'], className:'btn btn-ghost', style:{ flex:1, textDecoration:'none', display:'flex', alignItems:'center', justifyContent:'center', gap:6 } }, '📞 Call'),
+      React.createElement('a', { href:'https://wa.me/91'+viewProfile['Phone'].toString().replace(/\D/g,''), target:'_blank', className:'btn btn-success', style:{ flex:1, textDecoration:'none', display:'flex', alignItems:'center', justifyContent:'center', gap:6 } }, '💬 WhatsApp')
+    ),
+    React.createElement('div', { className:'form-label', style:{ marginBottom:6 } }, 'Work Info'),
+    React.createElement('div', { className:'list', style:{ marginBottom:12 } },
+      ...[['📅','Date of Joining',doj],['🏢','Department',viewProfile['Department']||'—'],['⚙️','Capabilities',viewProfile['Capabilities']||'—'],['₹','Slab Rate',viewProfile['SlabRate']?'₹'+viewProfile['SlabRate']+'/hr':'—'],['📌','Status',viewProfile['Status']||'Active']].map(([ic,lb,vl]) =>
+        React.createElement('div', { key:lb, className:'list-row' },
+          React.createElement('div', { className:'list-icon', style:{ background:'var(--red-light)' } }, ic),
+          React.createElement('div', { className:'list-body' },
+            React.createElement('div', { className:'list-sub', style:{ fontSize:10, textTransform:'uppercase', letterSpacing:'0.5px', fontWeight:600 } }, lb),
+            React.createElement('div', { className:'list-title', style:{ fontSize:13, marginTop:1 } }, vl)
+          )
+        )
+      )
+    ),
+    React.createElement('div', { className:'form-label', style:{ marginBottom:6 } }, 'Contact'),
+    React.createElement('div', { className:'list', style:{ marginBottom:12 } },
+      ...[['📱','Mobile',viewProfile['Phone']||'—'],['🆘','Emergency',viewProfile['EmergencyPhone']||'—']].map(([ic,lb,vl]) =>
+        React.createElement('div', { key:lb, className:'list-row' },
+          React.createElement('div', { className:'list-icon', style:{ background:'var(--red-light)' } }, ic),
+          React.createElement('div', { className:'list-body' },
+            React.createElement('div', { className:'list-sub', style:{ fontSize:10, textTransform:'uppercase', fontWeight:600 } }, lb),
+            React.createElement('div', { className:'list-title', style:{ fontSize:13 } }, vl)
+          )
+        )
+      )
+    ),
+    React.createElement('div', { className:'form-label', style:{ marginBottom:6 } }, 'Address'),
+    React.createElement('div', { className:'card' }, React.createElement('div', { className:'card-body', style:{ fontSize:13, color:'var(--text3)', lineHeight:1.6 } }, viewProfile['Address']||'—'))
+  );
+}
+
+// ── Leave Page ───────────────────────────────────────────────
+function LeavePage() {
+  const [leaves, setLeaves] = useState([]);
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+  const [type, setType] = useState('');
+  const [reason, setReason] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState(null);
+
+  useEffect(() => {
+    loadLeaves();
+  }, []);
+
+  function loadLeaves() {
+    gasCall('getMyLeaves', [], setLeaves, () => {});
+  }
+
+  function doApply() {
+    if (!from||!to||!type||!reason.trim()) { setMsg({ type:'error', text:'Please fill all fields.' }); return; }
+    if (new Date(to) < new Date(from)) { setMsg({ type:'error', text:'To date cannot be before From date.' }); return; }
+    setLoading(true);
+    gasCall('applyLeave', [from, to, type, reason], (r) => {
+      setLoading(false);
+      if (r.success) { setMsg({ type:'success', text:'Leave request submitted!' }); setFrom(''); setTo(''); setType(''); setReason(''); loadLeaves(); }
+      else setMsg({ type:'error', text: r.message||'Failed.' });
+    }, (e) => { setLoading(false); setMsg({ type:'error', text:e.message }); });
+  }
+
+  return React.createElement('div', { className:'page' },
+    React.createElement('div', { className:'section-title' }, 'Leave'),
+    msg && React.createElement('div', { className:'alert alert-'+msg.type }, msg.text),
+    React.createElement('div', { className:'form-label', style:{ marginBottom:6 } }, 'Apply for Leave'),
+    React.createElement('div', { className:'card', style:{ marginBottom:18 } },
+      React.createElement('div', { className:'card-body' },
+        React.createElement('div', { className:'form-group', style:{ marginBottom:12 } },
+          React.createElement('div', { className:'form-row' }, React.createElement('span', { className:'icon' }, '🗓'), React.createElement('label', null, 'From'), React.createElement('input', { type:'date', value:from, onChange:e=>setFrom(e.target.value) })),
+          React.createElement('div', { className:'form-row' }, React.createElement('span', { className:'icon' }, '🗓'), React.createElement('label', null, 'To'), React.createElement('input', { type:'date', value:to, onChange:e=>setTo(e.target.value) })),
+          React.createElement('div', { className:'form-row' }, React.createElement('span', { className:'icon' }, '📋'), React.createElement('label', null, 'Type'),
+            React.createElement('select', { value:type, onChange:e=>setType(e.target.value) },
+              React.createElement('option', { value:'' }, 'Select'),
+              React.createElement('option', { value:'Sick' }, '🤒 Sick'),
+              React.createElement('option', { value:'Personal' }, '👤 Personal'),
+              React.createElement('option', { value:'Emergency' }, '🆘 Emergency')
+            )
+          ),
+          React.createElement('div', { className:'form-row', style:{ alignItems:'flex-start' } },
+            React.createElement('span', { className:'icon', style:{ marginTop:12 } }, '💬'),
+            React.createElement('label', { style:{ marginTop:12 } }, 'Reason'),
+            React.createElement('textarea', { rows:2, value:reason, onChange:e=>setReason(e.target.value), placeholder:'Brief reason', style:{ flex:1, border:'none', outline:'none', background:'none', fontSize:14, fontFamily:'inherit', color:'var(--text)', padding:'12px 0', textAlign:'left', resize:'none' } })
+          )
+        ),
+        React.createElement('button', { className:'btn btn-primary', onClick:doApply, disabled:loading },
+          loading ? React.createElement('span', null, React.createElement('span', { className:'spinner' }), 'Submitting…') : 'Submit Leave Request'
+        )
+      )
+    ),
+    React.createElement('div', { className:'form-label', style:{ marginBottom:6 } }, 'My Leave History'),
+    leaves.length === 0
+      ? React.createElement('div', { className:'empty' }, React.createElement('div', { className:'ei' }, '🏖'), React.createElement('p', null, 'No leave requests yet.'))
+      : leaves.map(r =>
+          React.createElement('div', { key:r.leaveId, className:'card', style:{ marginBottom:10 } },
+            React.createElement('div', { className:'card-body' },
+              React.createElement('div', { style:{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6 } },
+                React.createElement('span', { style:{ fontSize:14, fontWeight:600 } }, (r.leaveType==='Sick'?'🤒':r.leaveType==='Emergency'?'🆘':'👤')+' '+r.leaveType),
+                React.createElement('span', { className:'tag '+(r.status==='Approved'?'tag-green':r.status==='Rejected'?'tag-red':'tag-orange') },
+                  r.status==='Approved'?'✓ Approved':r.status==='Rejected'?'✕ Rejected':'⏳ Pending'
+                )
+              ),
+              React.createElement('div', { style:{ fontSize:12, color:'var(--text3)', marginBottom:4 } }, '📅 '+r.fromDate+' → '+r.toDate),
+              React.createElement('div', { style:{ fontSize:13 } }, r.reason),
+              r.adminRemark && React.createElement('div', { style:{ fontSize:11, color:'var(--blue)', marginTop:4, fontStyle:'italic' } }, 'Admin: '+r.adminRemark),
+              React.createElement('div', { style:{ fontSize:10, color:'var(--text4)', marginTop:4 } }, 'Applied: '+r.appliedOn)
+            )
+          )
+        )
+  );
+}
+
+// ── History Page ─────────────────────────────────────────────
+function RequestPage({ user }) {
+  const [profile, setProfile] = useState(null);
+  const [requests, setRequests] = useState([]);
+  const [requestedRate, setRequestedRate] = useState('');
+  const [reason, setReason] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState(null);
+
+  useEffect(() => { loadData(); }, []);
+
+  function loadData() {
+    gasCall('getMyProfile', [], setProfile, ()=>{});
+    gasCall('getMySalaryRequests', [], r=>setRequests(r||[]), ()=>{});
+  }
+
+  function submitRequest() {
+    const currentRate = parseFloat(profile?.SlabRate || 0) || 0;
+    if (!requestedRate || !reason.trim()) { setMsg({ type:'error', text:'Enter requested rate and reason.' }); return; }
+    setLoading(true);
+    gasCall('applySalaryRequest', [currentRate, requestedRate, reason], (r) => {
+      setLoading(false);
+      if (r.success) {
+        setMsg({ type:'success', text:'Salary hike request submitted.' });
+        setRequestedRate('');
+        setReason('');
+        loadData();
+      } else setMsg({ type:'error', text:r.message||'Request failed.' });
+    }, (e)=>{ setLoading(false); setMsg({ type:'error', text:e.message }); });
+  }
+
+  const currentRate = parseFloat(profile?.SlabRate || 0) || 0;
+
+  return React.createElement('div', { className:'page' },
+    React.createElement('div', { className:'section-title' }, 'Request'),
+    msg && React.createElement('div', { className:'alert alert-'+msg.type }, msg.text),
+    React.createElement('div', { className:'card', style:{ marginBottom:14 } },
+      React.createElement('div', { className:'card-header' }, React.createElement('span', { className:'card-title' }, 'Salary Hike Request')),
+      React.createElement('div', { className:'card-body' },
+        React.createElement('div', { className:'stat-row' },
+          React.createElement('div', { className:'stat-box' }, React.createElement('div', { className:'sn' }, '₹'+currentRate), React.createElement('div', { className:'sl' }, 'Current Rate'))
+        ),
+        React.createElement('div', { className:'form-group', style:{ marginBottom:12 } },
+          React.createElement('div', { className:'form-row' }, React.createElement('span', { className:'icon' }, '₹'), React.createElement('label', null, 'New Rate'), React.createElement('input', { type:'number', placeholder:'Requested / hour', value:requestedRate, onChange:e=>setRequestedRate(e.target.value) })),
+          React.createElement('div', { className:'form-row', style:{ alignItems:'flex-start' } },
+            React.createElement('span', { className:'icon', style:{ marginTop:12 } }, '💬'),
+            React.createElement('label', { style:{ marginTop:12 } }, 'Reason'),
+            React.createElement('textarea', { rows:3, placeholder:'Explain your work, skill, responsibility, or performance reason', value:reason, onChange:e=>setReason(e.target.value), style:{ flex:1, border:'none', outline:'none', background:'none', fontSize:14, fontFamily:'inherit', color:'var(--text)', padding:'12px 0', textAlign:'left', resize:'none' } })
+          )
+        ),
+        React.createElement('button', { className:'btn btn-primary', onClick:submitRequest, disabled:loading },
+          loading ? React.createElement('span', null, React.createElement('span', { className:'spinner' }), 'Submitting...') : 'Submit Request'
+        )
+      )
+    ),
+    React.createElement('div', { className:'form-label', style:{ marginBottom:6 } }, 'My Request History'),
+    requests.length === 0
+      ? React.createElement('div', { className:'empty' }, React.createElement('div', { className:'ei' }, '📝'), React.createElement('p', null, 'No requests yet.'))
+      : requests.map(r => React.createElement('div', { key:r.requestId, className:'card', style:{ marginBottom:10 } },
+          React.createElement('div', { className:'card-body' },
+            React.createElement('div', { style:{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:6 } },
+              React.createElement('div', { style:{ fontSize:14, fontWeight:700 } }, '₹'+r.currentRate+' → ₹'+r.requestedRate),
+              React.createElement('span', { className:'tag '+(r.status==='Accepted'?'tag-green':r.status==='Rejected'?'tag-red':'tag-orange') }, r.status)
+            ),
+            React.createElement('div', { style:{ fontSize:13, color:'var(--text3)', marginBottom:4 } }, r.reason),
+            React.createElement('div', { style:{ fontSize:11, color:'var(--text4)' } }, 'Applied: '+r.appliedOn),
+            r.adminRemark && React.createElement('div', { style:{ fontSize:12, color:'var(--blue)', marginTop:6, fontStyle:'italic' } }, 'Admin: '+r.adminRemark)
+          )
+        ))
+  );
+}
+
+function HistPage() {
+  const [records, setRecords] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadHistory();
+  }, []);
+
+  function loadHistory() {
+    gasCall('getMyAtt', [], (r) => { setRecords(r||[]); setLoading(false); }, () => setLoading(false));
+  }
+
+  if (loading) return React.createElement('div', { className:'page empty' }, React.createElement('div', { className:'ei' }, '⏳'), React.createElement('p', null, 'Loading…'));
+
+  const totalW = records.reduce((s,r)=>s+(parseFloat(r.workHours)||0),0);
+  const totalS = records.reduce((s,r)=>s+(parseFloat(r.salary)||0),0);
+  const days   = records.filter(r=>r.attStatus==='OUT').length;
+
+  return React.createElement('div', { className:'page' },
+    React.createElement('div', { className:'section-title' }, 'History'),
+    records.length > 0 && React.createElement('div', { className:'stat-row' },
+      React.createElement('div', { className:'stat-box' }, React.createElement('div', { className:'sn' }, days), React.createElement('div', { className:'sl' }, 'Days')),
+      React.createElement('div', { className:'stat-box' }, React.createElement('div', { className:'sn', style:{fontSize:15} }, totalW.toFixed(1)+'h'), React.createElement('div', { className:'sl' }, 'Hours')),
+      React.createElement('div', { className:'stat-box' }, React.createElement('div', { className:'sn', style:{fontSize:14} }, '₹'+Math.round(totalS)), React.createElement('div', { className:'sl' }, 'Earned'))
+    ),
+    records.length === 0
+      ? React.createElement('div', { className:'empty' }, React.createElement('div', { className:'ei' }, '📭'), React.createElement('p', null, 'No records yet.'))
+      : React.createElement('div', { className:'list' },
+          records.map((r,i) => {
+            const wh = parseFloat(r.workHours)||0;
+            const sal = parseFloat(r.salary)||0;
+            return React.createElement('div', { key:i, className:'list-row' },
+              React.createElement('div', { className:'list-icon', style:{ background:'var(--red-light)' } }, '📅'),
+              React.createElement('div', { className:'list-body' },
+                React.createElement('div', { className:'list-title' }, r.date),
+                React.createElement('div', { className:'list-sub' }, '🟢 '+(r.inTime||'—')+' 🔴 '+(r.outTime||'—')),
+                React.createElement('div', { style:{ display:'flex', gap:8, marginTop:3 } },
+                  wh > 0 && React.createElement('span', { style:{ fontSize:11, color:'var(--text3)' } }, '⏱ '+wh.toFixed(2)+'h'),
+                  sal > 0 && React.createElement('span', { style:{ fontSize:11, color:'var(--green)', fontWeight:600 } }, '₹'+sal.toFixed(2))
+                )
+              )
+            );
+          })
+        )
+  );
+}
+
+// ── Report Page ───────────────────────────────────────────────
+function ReportPage() {
+  const [month, setMonth] = useState(new Date().getMonth()+1);
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [dept, setDept] = useState('ALL');
+  const [depts, setDepts] = useState([]);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [generated, setGenerated] = useState(false);
+
+  useEffect(() => {
+    gasCall('getDepartments', [], setDepts, ()=>{});
+  }, []);
+
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const years = [new Date().getFullYear(), new Date().getFullYear()-1, new Date().getFullYear()-2];
+
+  function generate() {
+    setLoading(true);
+    gasCall('getMonthlyReport', [month, year, dept], (d) => { setData(d||[]); setLoading(false); setGenerated(true); }, (e) => { showToast('⚠️ '+e.message); setLoading(false); });
+  }
+
+  const grandTotal = data.reduce((s,d)=>s+d.totalSalary,0);
+
+  return React.createElement('div', { className:'page' },
+    React.createElement('div', { className:'section-title' }, 'Monthly Report'),
+    React.createElement('div', { className:'card', style:{ marginBottom:14 } },
+      React.createElement('div', { className:'card-body' },
+        React.createElement('div', { className:'form-group', style:{ marginBottom:12 } },
+          React.createElement('div', { className:'form-row' },
+            React.createElement('span', { className:'icon' }, '📅'),
+            React.createElement('label', null, 'Month'),
+            React.createElement('select', { value:month, onChange:e=>setMonth(parseInt(e.target.value)) },
+              months.map((m,i) => React.createElement('option', { key:i, value:i+1 }, m))
+            )
+          ),
+          React.createElement('div', { className:'form-row' },
+            React.createElement('span', { className:'icon' }, '📆'),
+            React.createElement('label', null, 'Year'),
+            React.createElement('select', { value:year, onChange:e=>setYear(parseInt(e.target.value)) },
+              years.map(y => React.createElement('option', { key:y, value:y }, y))
+            )
+          ),
+          React.createElement('div', { className:'form-row' },
+            React.createElement('span', { className:'icon' }, '🏢'),
+            React.createElement('label', null, 'Department'),
+            React.createElement('select', { value:dept, onChange:e=>setDept(e.target.value) },
+              React.createElement('option', { value:'ALL' }, 'All'),
+              depts.map(d => React.createElement('option', { key:d, value:d }, d))
+            )
+          )
+        ),
+        React.createElement('button', { className:'btn btn-primary', onClick:generate, disabled:loading },
+          loading ? React.createElement('span', null, React.createElement('span', { className:'spinner' }), 'Generating…') : 'Generate Report'
+        )
+      )
+    ),
+    generated && data.length === 0 && React.createElement('div', { className:'empty' }, React.createElement('div', { className:'ei' }, '📭'), React.createElement('p', null, 'No data for this period.')),
+    generated && data.length > 0 && React.createElement('div', null,
+      React.createElement('div', { className:'stat-row' },
+        React.createElement('div', { className:'stat-box' }, React.createElement('div', { className:'sn' }, data.length), React.createElement('div', { className:'sl' }, 'Staff')),
+        React.createElement('div', { className:'stat-box' }, React.createElement('div', { className:'sn', style:{fontSize:14} }, '₹'+Math.round(grandTotal)), React.createElement('div', { className:'sl' }, 'Total'))
+      ),
+      data.map(s =>
+        React.createElement('div', { key:s.email, className:'card', style:{ marginBottom:10 } },
+          React.createElement('div', { className:'card-header' },
+            React.createElement('div', null,
+              React.createElement('div', { className:'card-title' }, s.name),
+              React.createElement('div', { style:{ fontSize:11, color:'var(--text3)' } }, s.department+' | '+s.days+' days')
+            ),
+            React.createElement('div', { style:{ textAlign:'right' } },
+              React.createElement('div', { style:{ fontSize:17, fontWeight:700, color:'var(--green)' } }, '₹'+s.totalSalary.toFixed(2)),
+              React.createElement('div', { style:{ fontSize:10, color:'var(--text4)' } }, s.totalWork.toFixed(2)+'h')
+            )
+          ),
+          React.createElement('div', { className:'card-body', style:{ overflowX:'auto', paddingTop:10 } },
+            React.createElement('table', { style:{ width:'100%', borderCollapse:'collapse', fontSize:12, minWidth:280 } },
+              React.createElement('thead', null,
+                React.createElement('tr', { style:{ background:'var(--red-light)' } },
+                  ['Date','In','Out','Hrs','₹'].map(h => React.createElement('th', { key:h, style:{ padding:'6px 8px', textAlign:'left', color:'var(--red)' } }, h))
+                )
+              ),
+              React.createElement('tbody', null,
+                s.records.map((rec,i) =>
+                  React.createElement('tr', { key:i, style:{ borderBottom:'1px solid var(--border)' } },
+                    React.createElement('td', { style:{ padding:'5px 8px' } }, rec.date),
+                    React.createElement('td', { style:{ padding:'5px 8px' } }, rec.inTime||'—'),
+                    React.createElement('td', { style:{ padding:'5px 8px' } }, rec.outTime||'—'),
+                    React.createElement('td', { style:{ padding:'5px 8px' } }, rec.workHours?rec.workHours.toFixed(2):'—'),
+                    React.createElement('td', { style:{ padding:'5px 8px', color:'var(--green)', fontWeight:600 } }, rec.salary?'₹'+rec.salary.toFixed(2):'—')
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  );
+}
+
+// ── Advance Page ─────────────────────────────────────────────
+function AdvancePage({ user }) {
+  const [data, setData] = useState({ requests: [], outstanding: 0 });
+  const [amount, setAmount] = useState('');
+  const [reason, setReason] = useState('');
+  const [dateNeeded, setDateNeeded] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState(null);
+  const [waUrl, setWaUrl] = useState(null);
+
+  useEffect(() => { loadAdvances(); }, []);
+
+  function loadAdvances() {
+    gasCall('getMyAdvances', [], r => setData(r || { requests: [], outstanding: 0 }), () => {});
+  }
+
+  function doApply() {
+    const amt = parseFloat(amount);
+    if (!amount || isNaN(amt) || amt <= 0) { setMsg({ type:'error', text:'Enter a valid amount.' }); return; }
+    if (amt > 5000) { setMsg({ type:'error', text:'Maximum advance is ₹5000 per request.' }); return; }
+    if (!reason.trim()) { setMsg({ type:'error', text:'Reason is required.' }); return; }
+    if (!dateNeeded) { setMsg({ type:'error', text:'Date needed is required.' }); return; }
+    setLoading(true); setWaUrl(null);
+    gasCall('applyAdvance', [amount, reason, dateNeeded], (r) => {
+      setLoading(false);
+      if (r.success) {
+        setMsg({ type:'success', text:'Advance request submitted!' });
+        setWaUrl('https://wa.me/916383292367?text=' + encodeURIComponent(r.waText));
+        setAmount(''); setReason(''); setDateNeeded('');
+        loadAdvances();
+      } else { setMsg({ type:'error', text:r.message || 'Failed.' }); }
+    }, (e) => { setLoading(false); setMsg({ type:'error', text:e.message }); });
+  }
+
+  const { requests, outstanding } = data;
+
+  return React.createElement('div', { className:'page' },
+    React.createElement('div', { className:'section-title' }, 'Advance'),
+    outstanding > 0 && React.createElement('div', { className:'alert alert-error', style:{ marginBottom:12 } },
+      '⚠️ Outstanding advance: ₹' + outstanding.toFixed(2) + ' — to be repaid'
+    ),
+    msg && React.createElement('div', null,
+      React.createElement('div', { className:'alert alert-' + msg.type }, msg.text),
+      msg.type === 'success' && waUrl && React.createElement('a', {
+        href:waUrl, target:'_blank', className:'btn btn-success',
+        style:{ marginTop:-4, marginBottom:12, display:'flex', alignItems:'center', justifyContent:'center', gap:8, textDecoration:'none' }
+      }, '💬 Notify Admin on WhatsApp')
+    ),
+    React.createElement('div', { className:'form-label', style:{ marginBottom:6 } }, 'Request Advance'),
+    React.createElement('div', { className:'card', style:{ marginBottom:18 } },
+      React.createElement('div', { className:'card-body' },
+        React.createElement('div', { className:'form-group', style:{ marginBottom:12 } },
+          React.createElement('div', { className:'form-row' },
+            React.createElement('span', { className:'icon' }, '₹'),
+            React.createElement('label', null, 'Amount'),
+            React.createElement('input', { type:'number', placeholder:'Max ₹5000', max:5000, min:1, value:amount, onChange:e=>setAmount(e.target.value) })
+          ),
+          React.createElement('div', { className:'form-row' },
+            React.createElement('span', { className:'icon' }, '📅'),
+            React.createElement('label', null, 'Date Needed'),
+            React.createElement('input', { type:'date', value:dateNeeded, onChange:e=>setDateNeeded(e.target.value) })
+          ),
+          React.createElement('div', { className:'form-row', style:{ alignItems:'flex-start' } },
+            React.createElement('span', { className:'icon', style:{ marginTop:12 } }, '💬'),
+            React.createElement('label', { style:{ marginTop:12 } }, 'Reason'),
+            React.createElement('textarea', { rows:2, value:reason, onChange:e=>setReason(e.target.value), placeholder:'Brief reason', style:{ flex:1, border:'none', outline:'none', background:'none', fontSize:14, fontFamily:'inherit', color:'var(--text)', padding:'12px 0', textAlign:'left', resize:'none' } })
+          )
+        ),
+        React.createElement('button', { className:'btn btn-primary', onClick:doApply, disabled:loading },
+          loading ? React.createElement('span', null, React.createElement('span', { className:'spinner' }), 'Submitting…') : 'Submit Advance Request'
+        )
+      )
+    ),
+    React.createElement('div', { className:'form-label', style:{ marginBottom:6 } }, 'My Advance History'),
+    requests.length === 0
+      ? React.createElement('div', { className:'empty' }, React.createElement('div', { className:'ei' }, '💰'), React.createElement('p', null, 'No advance requests yet.'))
+      : requests.map(r =>
+          React.createElement('div', { key:r.advanceId, className:'card', style:{ marginBottom:10 } },
+            React.createElement('div', { className:'card-body' },
+              React.createElement('div', { style:{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6 } },
+                React.createElement('div', null,
+                  React.createElement('div', { style:{ fontSize:16, fontWeight:700 } }, '₹' + r.amountRequested),
+                  React.createElement('div', { style:{ fontSize:11, color:'var(--text3)' } }, 'Applied: ' + r.timestamp)
+                ),
+                React.createElement('div', { style:{ textAlign:'right' } },
+                  React.createElement('span', { className:'tag ' + (r.status==='Approved'?'tag-green':r.status==='Rejected'?'tag-red':'tag-orange') },
+                    r.status==='Approved' ? '✓ Approved' : r.status==='Rejected' ? '✕ Rejected' : '⏳ Pending'
+                  ),
+                  r.status==='Approved' && React.createElement('div', { style:{ fontSize:10, color:'var(--text4)', marginTop:2 } },
+                    r.repaymentStatus==='Repaid' ? '✓ Repaid' : '⚠️ Outstanding'
+                  )
+                )
+              ),
+              r.status==='Approved' && r.amountApproved !== r.amountRequested && React.createElement('div', { style:{ fontSize:14, color:'var(--green)', fontWeight:700, marginBottom:4 } }, 'Approved: ₹' + r.amountApproved),
+              React.createElement('div', { style:{ fontSize:12, color:'var(--text3)', marginBottom:4 } }, '📅 Needed by: ' + r.dateNeeded),
+              React.createElement('div', { style:{ fontSize:13 } }, r.reason),
+              r.adminNotes && React.createElement('div', { style:{ fontSize:11, color:'var(--blue)', marginTop:4, fontStyle:'italic' } }, 'Admin: ' + r.adminNotes)
+            )
+          )
+        )
+  );
+}
+
+// ── Admin Page ────────────────────────────────────────────────
+function AdminPage() {
+  const [tab, setTab] = useState('staff');
+  const [staff, setStaff] = useState([]);
+  const [leaves, setLeaves] = useState([]);
+  const [requests, setRequests] = useState([]);
+  const [attRec, setAttRec] = useState([]);
+  const [depts, setDepts] = useState([]);
+  const [newEmail, setNewEmail] = useState('');
+  const [newDept, setNewDept] = useState('');
+  const [deptFilter, setDeptFilter] = useState('ALL');
+  const [leaveFilter, setLeaveFilter] = useState('ALL');
+  const [reqFilter, setReqFilter] = useState('ALL');
+  const [attFilter, setAttFilter] = useState('ALL');
+  const [starsModal, setStarsModal] = useState(null);
+  const [selStars, setSelStars] = useState(0);
+  const [remark, setRemark] = useState('');
+  const [advances, setAdvances] = useState([]);
+  const [advFilter, setAdvFilter] = useState('ALL');
+  const [outstanding, setOutstanding] = useState([]);
+  const [approveModal, setApproveModal] = useState(null);
+  const [approveAmt, setApproveAmt] = useState('');
+  const [approveNote, setApproveNote] = useState('');
+
+  useEffect(() => {
+    loadDepts();
+    loadStaff('ALL');
+    loadLeaves('ALL');
+    loadRequests('ALL');
+    loadAtt('ALL');
+    loadAdvances('ALL');
+  }, []);
+
+  function loadDepts() { gasCall('getDepartments', [], setDepts, ()=>{}); }
+  function loadStaff(d) { gasCall('getStaffByDept', [d], r=>setStaff(r||[]), ()=>{}); }
+  function loadLeaves(s) { gasCall('getAllLeaves', [s], r=>setLeaves(r||[]), ()=>{}); }
+  function loadRequests(s) { gasCall('getAllSalaryRequests', [s], r=>setRequests(r||[]), ()=>{}); }
+  function loadAtt(d) { gasCall('getAllAtt', [d], r=>setAttRec(r||[]), ()=>{}); }
+  function loadAdvances(s) {
+    gasCall('getAllAdvances', [s], r=>setAdvances(r||[]), ()=>{});
+    gasCall('getStaffOutstanding', [], r=>setOutstanding(r||[]), ()=>{});
+  }
+
+  function doAddEmail() {
+    if (!newEmail.trim()) { showToast('⚠️ Enter email.'); return; }
+    gasCall('addStaffEmail', [newEmail.trim()], (r) => {
+      if (r.success) { showToast('✅ Added: '+newEmail); setNewEmail(''); loadStaff('ALL'); }
+      else showToast('⚠️ '+r.message);
+    }, (e)=>showToast('⚠️ '+e.message));
+  }
+
+  function doRemoveEmail(email) {
+    if (!confirm('Remove access for '+email+'?')) return;
+    gasCall('removeStaffEmail', [email], (r) => {
+      if (r.success) { showToast('🗑 Removed'); loadStaff(deptFilter); }
+      else showToast('⚠️ '+r.message);
+    }, ()=>{});
+  }
+
+  function doAddDept() {
+    if (!newDept.trim()) return;
+    const updated = [...depts, newDept.trim()];
+    gasCall('saveDepartments', [updated], () => { showToast('✅ Department added!'); setNewDept(''); loadDepts(); }, ()=>{});
+  }
+
+  function doRemoveDept(d) {
+    if (!confirm('Remove department: '+d+'?')) return;
+    const updated = depts.filter(x=>x!==d);
+    gasCall('saveDepartments', [updated], () => { showToast('Removed: '+d); loadDepts(); }, ()=>{});
+  }
+
+  function doUpdateLeave(leaveId, status, remEl) {
+    const rem = remEl ? remEl.value.trim() : '';
+    gasCall('updateLeave', [leaveId, status, rem], (r) => {
+      if (r.success) { showToast(status==='Approved'?'✅ Approved':'❌ Rejected'); loadLeaves(leaveFilter); }
+      else showToast('⚠️ '+r.message);
+    }, ()=>{});
+  }
+
+  function doUpdateRequest(requestId, status, remEl) {
+    const rem = remEl ? remEl.value.trim() : '';
+    gasCall('updateSalaryRequest', [requestId, status, rem], (r) => {
+      if (r.success) { showToast(status==='Accepted'?'✅ Accepted':'❌ Rejected'); loadRequests(reqFilter); loadStaff(deptFilter); }
+      else showToast('⚠️ '+(r.message||'Failed'));
+    }, ()=>{});
+  }
+
+  function doSaveStars() {
+    if (!selStars) { showToast('Select a rating.'); return; }
+    gasCall('saveStars', [starsModal.email, selStars, remark], (r) => {
+      if (r.success) { showToast('⭐ Rating saved!'); setStarsModal(null); loadStaff(deptFilter); }
+      else showToast('⚠️ '+r.message);
+    }, ()=>{});
+  }
+
+  function doRejectAdvance(advanceId, noteEl) {
+    const note = noteEl ? noteEl.value.trim() : '';
+    gasCall('updateAdvance', [advanceId, 'Rejected', 0, note], (r) => {
+      if (r.success) { showToast('❌ Rejected'); loadAdvances(advFilter); }
+      else showToast('⚠️ ' + (r.message || 'Failed'));
+    }, () => {});
+  }
+
+  const tabs = [['staff','👥 Staff'],['leaves','🏖 Leaves'],['requests','📝 Requests'],['att','📋 Attend.'],['dept','🏢 Depts'],['advance','💰 Advance']];
+
+  return React.createElement('div', { className:'page' },
+    React.createElement('div', { className:'section-title' }, 'Admin'),
+    // Sub-tabs
+    React.createElement('div', { className:'chips', style:{ marginBottom:14 } },
+      tabs.map(([id,lb]) =>
+        React.createElement('div', { key:id, className:'chip'+(tab===id?' active':''), onClick:()=>setTab(id) }, lb)
+      )
+    ),
+
+    // Staff Tab
+    tab === 'staff' && React.createElement('div', null,
+      React.createElement('div', { className:'card', style:{ marginBottom:14 } },
+        React.createElement('div', { className:'card-header' }, React.createElement('span', { className:'card-title' }, 'Add Staff Email')),
+        React.createElement('div', { className:'card-body' },
+          React.createElement('div', { style:{ display:'flex', gap:8 } },
+            React.createElement('input', { className:'inp', placeholder:'staff@gmail.com', value:newEmail, onChange:e=>setNewEmail(e.target.value), style:{ flex:1 } }),
+            React.createElement('button', { className:'btn btn-primary btn-sm', onClick:doAddEmail }, 'Add')
+          ),
+          React.createElement('p', { style:{ fontSize:11, color:'var(--text4)', marginTop:6, textAlign:'center' } }, 'Staff can only sign in after their Gmail is added here')
+        )
+      ),
+      React.createElement('div', { className:'chips' },
+        React.createElement('div', { className:'chip'+(deptFilter==='ALL'?' active':''), onClick:()=>{setDeptFilter('ALL');loadStaff('ALL');} }, 'All'),
+        depts.map(d => React.createElement('div', { key:d, className:'chip'+(deptFilter===d?' active':''), onClick:()=>{setDeptFilter(d);loadStaff(d);} }, d))
+      ),
+      staff.length === 0
+        ? React.createElement('div', { className:'empty' }, React.createElement('div', { className:'ei' }, '👥'), React.createElement('p', null, 'No staff found. Add emails above.'))
+        : React.createElement('div', { className:'list' },
+            staff.map(s =>
+              React.createElement('div', { key:s.email, className:'list-row', style:{ alignItems:'flex-start', gap:10 } },
+                s.photoUrl
+                  ? React.createElement('img', { src:s.photoUrl, style:{ width:42, height:42, borderRadius:'50%', objectFit:'cover', border:'2px solid var(--red)', flexShrink:0 } })
+                  : React.createElement('div', { style:{ width:42, height:42, borderRadius:'50%', background:'var(--red-light)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, flexShrink:0 } }, '👤'),
+                React.createElement('div', { className:'list-body' },
+                  React.createElement('div', { className:'list-title' }, s.name || s.email),
+                  React.createElement('div', { className:'list-sub' }, s.email),
+                  React.createElement('div', { style:{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap', marginTop:4 } },
+                    React.createElement('span', { className:'tag '+(s.department==='Production'?'tag-blue':'tag-orange') }, s.department || 'Pending'),
+                    s.profileComplete !== 'YES' && React.createElement('span', { className:'tag tag-orange' }, 'Pending profile'),
+                    React.createElement('span', { style:{ fontSize:11, color:'var(--text3)' } }, s.slabRate ? '₹'+s.slabRate+'/hr' : 'Rate pending'),
+                    s.phone && React.createElement('a', { href:'tel:'+s.phone, onClick:()=>{}, style:{ fontSize:16, textDecoration:'none' } }, '📞'),
+                    s.phone && React.createElement('a', { href:'https://wa.me/91'+s.phone.toString().replace(/\D/g,''), target:'_blank', style:{ fontSize:16, textDecoration:'none' } }, '💬')
+                  ),
+                  React.createElement('div', { style:{ display:'flex', gap:6, marginTop:4, alignItems:'center' } },
+                    React.createElement(StarsDisplay, { count:parseInt(s.stars)||0 }),
+                    React.createElement('button', { className:'btn btn-ghost btn-sm', onClick:()=>{setStarsModal(s);setSelStars(parseInt(s.stars)||0);setRemark('');} }, '⭐ Rate'),
+                    React.createElement('button', { className:'btn btn-danger btn-sm', onClick:()=>doRemoveEmail(s.email) }, 'Remove')
+                  )
+                )
+              )
+            )
+          )
+    ),
+
+    // Leaves Tab
+    tab === 'leaves' && React.createElement('div', null,
+      React.createElement('div', { className:'chips' },
+        [['ALL','All'],['Pending','⏳ Pending'],['Approved','✓ Approved'],['Rejected','✕ Rejected']].map(([v,lb]) =>
+          React.createElement('div', { key:v, className:'chip'+(leaveFilter===v?' active':''), onClick:()=>{setLeaveFilter(v);loadLeaves(v);} }, lb)
+        )
+      ),
+      leaves.length === 0
+        ? React.createElement('div', { className:'empty' }, React.createElement('div', { className:'ei' }, '🏖'), React.createElement('p', null, 'No leave requests.'))
+        : leaves.map(r => {
+            const remRef = React.createRef();
+            return React.createElement('div', { key:r.leaveId, className:'card', style:{ marginBottom:10 } },
+              React.createElement('div', { className:'card-body' },
+                React.createElement('div', { style:{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6 } },
+                  React.createElement('div', null,
+                    React.createElement('div', { style:{ fontSize:14, fontWeight:600 } }, r.name),
+                    React.createElement('div', { style:{ fontSize:11, color:'var(--text3)' } }, r.department+' | '+r.appliedOn)
+                  ),
+                  React.createElement('span', { className:'tag '+(r.status==='Approved'?'tag-green':r.status==='Rejected'?'tag-red':'tag-orange') },
+                    r.status==='Approved'?'✓ Approved':r.status==='Rejected'?'✕ Rejected':'⏳ Pending'
+                  )
+                ),
+                React.createElement('div', { style:{ fontSize:13, marginBottom:4 } }, r.leaveType+' | 📅 '+r.fromDate+' → '+r.toDate),
+                React.createElement('div', { style:{ fontSize:13, color:'var(--text3)', marginBottom:8 } }, r.reason),
+                r.status === 'Pending' && React.createElement('div', null,
+                  React.createElement('input', { ref:remRef, className:'inp', placeholder:'Remark (optional)', style:{ marginBottom:8, fontSize:12 } }),
+                  React.createElement('div', { style:{ display:'flex', gap:8 } },
+                    React.createElement('button', { className:'btn btn-success btn-sm', onClick:()=>doUpdateLeave(r.leaveId,'Approved',remRef.current) }, '✓ Approve'),
+                    React.createElement('button', { className:'btn btn-danger btn-sm', onClick:()=>doUpdateLeave(r.leaveId,'Rejected',remRef.current) }, '✕ Reject')
+                  )
+                ),
+                r.adminRemark && React.createElement('div', { style:{ fontSize:11, color:'var(--blue)', fontStyle:'italic' } }, 'Admin: '+r.adminRemark)
+              )
+            );
+          })
+    ),
+
+    // Requests Tab
+    tab === 'requests' && React.createElement('div', null,
+      React.createElement('div', { className:'chips' },
+        [['ALL','All'],['Pending','⏳ Pending'],['Accepted','✓ Accepted'],['Rejected','✕ Rejected']].map(([v,lb]) =>
+          React.createElement('div', { key:v, className:'chip'+(reqFilter===v?' active':''), onClick:()=>{setReqFilter(v);loadRequests(v);} }, lb)
+        )
+      ),
+      requests.length === 0
+        ? React.createElement('div', { className:'empty' }, React.createElement('div', { className:'ei' }, '📝'), React.createElement('p', null, 'No salary hike requests.'))
+        : requests.map(r => {
+            const remRef = React.createRef();
+            return React.createElement('div', { key:r.requestId, className:'card', style:{ marginBottom:10 } },
+              React.createElement('div', { className:'card-body' },
+                React.createElement('div', { style:{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6 } },
+                  React.createElement('div', null,
+                    React.createElement('div', { style:{ fontSize:14, fontWeight:700 } }, r.name || r.email),
+                    React.createElement('div', { style:{ fontSize:11, color:'var(--text3)' } }, r.department+' | '+r.appliedOn)
+                  ),
+                  React.createElement('span', { className:'tag '+(r.status==='Accepted'?'tag-green':r.status==='Rejected'?'tag-red':'tag-orange') }, r.status)
+                ),
+                React.createElement('div', { style:{ fontSize:15, fontWeight:700, marginBottom:4 } }, '₹'+r.currentRate+' → ₹'+r.requestedRate+'/hr'),
+                React.createElement('div', { style:{ fontSize:13, color:'var(--text3)', marginBottom:8 } }, r.reason),
+                r.status === 'Pending' && React.createElement('div', null,
+                  React.createElement('input', { ref:remRef, className:'inp', placeholder:'Admin remark (optional)', style:{ marginBottom:8, fontSize:12 } }),
+                  React.createElement('div', { style:{ display:'flex', gap:8 } },
+                    React.createElement('button', { className:'btn btn-success btn-sm', onClick:()=>doUpdateRequest(r.requestId,'Accepted',remRef.current) }, '✓ Accept'),
+                    React.createElement('button', { className:'btn btn-danger btn-sm', onClick:()=>doUpdateRequest(r.requestId,'Rejected',remRef.current) }, '✕ Reject')
+                  )
+                ),
+                r.adminRemark && React.createElement('div', { style:{ fontSize:11, color:'var(--blue)', fontStyle:'italic', marginTop:6 } }, 'Admin: '+r.adminRemark)
+              )
+            );
+          })
+    ),
+
+    // Attendance Tab
+    tab === 'att' && React.createElement('div', null,
+      React.createElement('div', { className:'chips' },
+        React.createElement('div', { className:'chip'+(attFilter==='ALL'?' active':''), onClick:()=>{setAttFilter('ALL');loadAtt('ALL');} }, 'All'),
+        depts.map(d => React.createElement('div', { key:d, className:'chip'+(attFilter===d?' active':''), onClick:()=>{setAttFilter(d);loadAtt(d);} }, d))
+      ),
+      attRec.length === 0
+        ? React.createElement('div', { className:'empty' }, React.createElement('div', { className:'ei' }, '📭'), React.createElement('p', null, 'No attendance records.'))
+        : React.createElement('div', { className:'list' },
+            attRec.map((r,i) => React.createElement('div', { key:i, className:'list-row' },
+              React.createElement('div', { className:'list-icon', style:{ background:'var(--red-light)' } }, '👤'),
+              React.createElement('div', { className:'list-body' },
+                React.createElement('div', { style:{ display:'flex', alignItems:'center', gap:6 } },
+                  React.createElement('span', { className:'list-title', style:{ fontSize:13 } }, r.name),
+                  React.createElement('span', { className:'tag '+(r.department==='Production'?'tag-blue':'tag-orange'), style:{ fontSize:10 } }, r.department),
+                  React.createElement('span', { className:'tag '+(r.attStatus==='OUT'?'tag-green':r.attStatus==='IN'?'tag-blue':'tag-orange') },
+                    r.attStatus==='OUT'?'✓':r.attStatus==='LUNCH'?'🍽':'●'
+                  )
+                ),
+                React.createElement('div', { className:'list-sub' }, r.date+' 🟢'+(r.inTime||'—')+' 🔴'+(r.outTime||'—')),
+                React.createElement('div', { style:{ display:'flex', gap:8, marginTop:2 } },
+                  (parseFloat(r.workHours)||0) > 0 && React.createElement('span', { style:{ fontSize:11, color:'var(--text3)' } }, '⏱ '+parseFloat(r.workHours).toFixed(2)+'h'),
+                  (parseFloat(r.salary)||0) > 0 && React.createElement('span', { style:{ fontSize:11, color:'var(--green)', fontWeight:600 } }, '₹'+parseFloat(r.salary).toFixed(2))
+                )
+              )
+            ))
+          )
+    ),
+
+    // Departments Tab
+    tab === 'dept' && React.createElement('div', null,
+      React.createElement('div', { className:'card', style:{ marginBottom:14 } },
+        React.createElement('div', { className:'card-body' },
+          depts.map(d =>
+            React.createElement('div', { key:d, style:{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 0', borderBottom:'1px solid var(--border)' } },
+              React.createElement('span', { style:{ fontSize:14 } }, d),
+              React.createElement('button', { className:'btn btn-danger btn-sm', onClick:()=>doRemoveDept(d) }, 'Remove')
+            )
+          ),
+          React.createElement('div', { style:{ display:'flex', gap:8, marginTop:12 } },
+            React.createElement('input', { className:'inp', placeholder:'New department name', value:newDept, onChange:e=>setNewDept(e.target.value), style:{ flex:1 } }),
+            React.createElement('button', { className:'btn btn-primary btn-sm', onClick:doAddDept }, 'Add')
+          )
+        )
+      )
+    ),
+
+    // Advance Tab
+    tab === 'advance' && React.createElement('div', null,
+      outstanding.length > 0 && React.createElement('div', null,
+        React.createElement('div', { className:'form-label', style:{ marginBottom:6 } }, 'Outstanding Balances'),
+        React.createElement('div', { className:'list', style:{ marginBottom:14 } },
+          outstanding.map(s =>
+            React.createElement('div', { key:s.email, className:'list-row' },
+              React.createElement('div', { className:'list-icon', style:{ background:'var(--orange-bg)' } }, '⚠️'),
+              React.createElement('div', { className:'list-body' },
+                React.createElement('div', { className:'list-title' }, s.name || s.email),
+                React.createElement('div', { className:'list-sub' }, '₹' + s.outstanding.toFixed(2) + ' outstanding')
+              )
+            )
+          )
+        )
+      ),
+      React.createElement('div', { className:'chips' },
+        [['ALL','All'],['Pending','⏳ Pending'],['Approved','✓ Approved'],['Rejected','✕ Rejected']].map(([v,lb]) =>
+          React.createElement('div', { key:v, className:'chip'+(advFilter===v?' active':''), onClick:()=>{setAdvFilter(v);loadAdvances(v);} }, lb)
+        )
+      ),
+      advances.length === 0
+        ? React.createElement('div', { className:'empty' }, React.createElement('div', { className:'ei' }, '💰'), React.createElement('p', null, 'No advance requests.'))
+        : advances.map(r => {
+            const remRef = React.createRef();
+            return React.createElement('div', { key:r.advanceId, className:'card', style:{ marginBottom:10 } },
+              React.createElement('div', { className:'card-body' },
+                React.createElement('div', { style:{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6 } },
+                  React.createElement('div', null,
+                    React.createElement('div', { style:{ fontSize:14, fontWeight:700 } }, r.name || r.email),
+                    React.createElement('div', { style:{ fontSize:11, color:'var(--text3)' } }, r.department + ' | ' + r.timestamp)
+                  ),
+                  React.createElement('span', { className:'tag ' + (r.status==='Approved'?'tag-green':r.status==='Rejected'?'tag-red':'tag-orange') },
+                    r.status==='Approved' ? '✓ Approved' : r.status==='Rejected' ? '✕ Rejected' : '⏳ Pending'
+                  )
+                ),
+                React.createElement('div', { style:{ fontSize:16, fontWeight:700, marginBottom:4 } }, '₹' + r.amountRequested + ' requested'),
+                r.status==='Approved' && r.amountApproved !== r.amountRequested && React.createElement('div', { style:{ fontSize:13, color:'var(--green)', fontWeight:600, marginBottom:4 } }, 'Approved: ₹' + r.amountApproved),
+                React.createElement('div', { style:{ fontSize:12, color:'var(--text3)', marginBottom:4 } }, '📅 Needed by: ' + r.dateNeeded),
+                React.createElement('div', { style:{ fontSize:13, color:'var(--text3)', marginBottom:8 } }, r.reason),
+                r.status==='Approved' && React.createElement('div', { style:{ marginBottom:8 } },
+                  React.createElement('span', { className:'tag ' + (r.repaymentStatus==='Repaid'?'tag-green':'tag-orange') },
+                    r.repaymentStatus==='Repaid' ? '✓ Repaid' : '⚠️ Outstanding'
+                  )
+                ),
+                r.status==='Pending' && React.createElement('div', null,
+                  React.createElement('input', { ref:remRef, className:'inp', placeholder:'Rejection reason (optional)', style:{ marginBottom:8, fontSize:12 } }),
+                  React.createElement('div', { style:{ display:'flex', gap:8 } },
+                    React.createElement('button', { className:'btn btn-success btn-sm', onClick:()=>{ setApproveModal(r); setApproveAmt(r.amountRequested.toString()); setApproveNote(''); } }, '✓ Approve'),
+                    React.createElement('button', { className:'btn btn-danger btn-sm', onClick:()=>doRejectAdvance(r.advanceId, remRef.current) }, '✕ Reject')
+                  )
+                ),
+                r.status==='Approved' && r.repaymentStatus!=='Repaid' && React.createElement('button', {
+                  className:'btn btn-ghost btn-sm', style:{ marginTop:4 },
+                  onClick:()=>{ if(!confirm('Mark ₹'+r.amountApproved+' as repaid by '+r.name+'?')) return; gasCall('markAdvanceRepaid', [r.advanceId], (res)=>{ if(res.success){showToast('✅ Marked as repaid');loadAdvances(advFilter);}else showToast('⚠️ Failed'); }, ()=>{}); }
+                }, '💰 Mark Repaid'),
+                r.adminNotes && React.createElement('div', { style:{ fontSize:11, color:'var(--blue)', fontStyle:'italic', marginTop:6 } }, 'Admin: ' + r.adminNotes)
+              )
+            );
+          })
+    ),
+
+    // Stars Modal
+    starsModal && React.createElement('div', { className:'modal-overlay', onClick:()=>setStarsModal(null) },
+      React.createElement('div', { className:'modal', onClick:e=>e.stopPropagation() },
+        React.createElement('h3', null, '⭐ Rate Staff'),
+        React.createElement('div', { style:{ fontSize:14, color:'var(--text3)', marginBottom:14 } }, starsModal.name),
+        React.createElement('div', { style:{ display:'flex', justifyContent:'center', gap:10, marginBottom:14 } },
+          [1,2,3,4,5].map(i =>
+            React.createElement('span', { key:i, style:{ fontSize:32, opacity:i<=selStars?1:0.2, cursor:'pointer' }, onClick:()=>setSelStars(i) }, '⭐')
+          )
+        ),
+        React.createElement('textarea', { className:'inp', rows:3, placeholder:'Add remarks…', value:remark, onChange:e=>setRemark(e.target.value), style:{ marginBottom:14 } }),
+        React.createElement('div', { style:{ display:'flex', gap:8 } },
+          React.createElement('button', { className:'btn btn-ghost', style:{ flex:1 }, onClick:()=>setStarsModal(null) }, 'Cancel'),
+          React.createElement('button', { className:'btn btn-primary', style:{ flex:1 }, onClick:doSaveStars }, 'Save Rating')
+        )
+      )
+    ),
+
+    // Approve Advance Modal
+    approveModal && React.createElement('div', { className:'modal-overlay', onClick:()=>setApproveModal(null) },
+      React.createElement('div', { className:'modal', onClick:e=>e.stopPropagation() },
+        React.createElement('h3', null, '✓ Approve Advance'),
+        React.createElement('div', { style:{ fontSize:13, color:'var(--text3)', marginBottom:14 } }, approveModal.name + ' requested ₹' + approveModal.amountRequested),
+        React.createElement('div', { className:'form-label', style:{ marginBottom:6 } }, 'Amount to Approve'),
+        React.createElement('input', { type:'number', className:'inp', max:approveModal.amountRequested, min:1, value:approveAmt, onChange:e=>setApproveAmt(e.target.value), style:{ marginBottom:12 }, placeholder:'₹ amount' }),
+        React.createElement('div', { className:'form-label', style:{ marginBottom:6 } }, 'Notes (optional)'),
+        React.createElement('textarea', { className:'inp', rows:2, placeholder:'Add notes…', value:approveNote, onChange:e=>setApproveNote(e.target.value), style:{ marginBottom:14 } }),
+        React.createElement('div', { style:{ display:'flex', gap:8 } },
+          React.createElement('button', { className:'btn btn-ghost', style:{ flex:1 }, onClick:()=>setApproveModal(null) }, 'Cancel'),
+          React.createElement('button', { className:'btn btn-primary', style:{ flex:1 }, onClick:()=>{
+            const amt = parseFloat(approveAmt) || 0;
+            if (!amt || amt > approveModal.amountRequested) { showToast('⚠️ Invalid amount'); return; }
+            gasCall('updateAdvance', [approveModal.advanceId, 'Approved', amt, approveNote], (r) => {
+              if (r.success) { showToast('✅ Approved'); setApproveModal(null); loadAdvances(advFilter); }
+              else showToast('⚠️ ' + (r.message || 'Failed'));
+            }, () => {});
+          } }, 'Approve')
+        )
+      )
+    )
+  );
+}
+
+// ── Notif Panel ───────────────────────────────────────────────
+function NotifPanel({ open, onClose, notifs }) {
+  return React.createElement('div', null,
+    open && React.createElement('div', { className:'nov', onClick:onClose }),
+    React.createElement('div', { className:'notif-panel'+(open?' open':'') },
+      React.createElement('div', { className:'notif-head' },
+        React.createElement('h3', null, '🔔 Notifications'),
+        React.createElement('button', { className:'notif-close', onClick:onClose }, '✕')
+      ),
+      notifs.length === 0
+        ? React.createElement('div', { className:'empty' }, React.createElement('div', { className:'ei' }, '🔔'), React.createElement('p', null, 'No new notifications'))
+        : notifs.map(n =>
+            React.createElement('div', { key:n.id, className:'notif-item', style:{ opacity:n.read==='YES'?0.72:1 } },
+              React.createElement('div', { className:'nm' }, n.message),
+              React.createElement('div', { className:'nt' }, n.createdOn + (n.read==='YES' ? ' | Read' : ' | New'))
+            )
+          )
+    )
+  );
+}
+
+// ── Profile Setup ─────────────────────────────────────────────
+function SetupScreen({ user, onDone }) {
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
+  const [doj, setDoj] = useState('');
+  const [phone, setPhone] = useState('');
+  const [emerg, setEmerg] = useState('');
+  const [dept, setDept] = useState('');
+  const [cap, setCap] = useState('');
+  const [slab, setSlab] = useState('');
+  const [depts, setDepts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState('');
+
+  useEffect(() => { gasCall('getDepartments', [], setDepts, ()=>{}); }, []);
+
+  function doSave() {
+    if (!name||!address||!doj||!dept||!cap||!slab) { setErr('Please fill all required fields.'); return; }
+    setLoading(true);
+    gasCall('saveProfile', [{ name, address, doj, capabilities:cap, department:dept, slabRate:slab, phone, emergencyPhone:emerg }], (r) => {
+      setLoading(false);
+      if (r.success) onDone({ ...user, name:r.name, department:r.department, profileComplete:true });
+      else setErr(r.message||'Save failed.');
+    }, (e) => { setLoading(false); setErr(e.message); });
+  }
+
+  return React.createElement('div', { className:'setup-wrap' },
+    React.createElement('div', { className:'setup-header' },
+      React.createElement('h2', null, 'Complete Your Profile'),
+      React.createElement('p', null, 'One-time setup — takes 2 minutes')
+    ),
+    React.createElement('div', { className:'setup-body' },
+      err && React.createElement('div', { className:'alert alert-error' }, err),
+      React.createElement('div', { className:'form-section' },
+        React.createElement('div', { className:'form-label' }, 'Personal Info'),
+        React.createElement('div', { className:'form-group' },
+          React.createElement('div', { className:'form-row' }, React.createElement('span', { className:'icon' }, '👤'), React.createElement('label', null, 'Full Name'), React.createElement('input', { type:'text', placeholder:'Required', value:name, onChange:e=>setName(e.target.value) })),
+          React.createElement('div', { className:'form-row', style:{ alignItems:'flex-start' } }, React.createElement('span', { className:'icon', style:{ marginTop:12 } }, '📍'), React.createElement('label', { style:{ marginTop:12 } }, 'Address'), React.createElement('textarea', { rows:2, placeholder:'Your address', value:address, onChange:e=>setAddress(e.target.value), style:{ flex:1, border:'none', outline:'none', background:'none', fontSize:14, fontFamily:'inherit', color:'var(--text)', padding:'12px 0', textAlign:'left', resize:'none' } })),
+          React.createElement('div', { className:'form-row' }, React.createElement('span', { className:'icon' }, '📅'), React.createElement('label', null, 'Joined On'), React.createElement('input', { type:'date', value:doj, onChange:e=>setDoj(e.target.value) }))
+        )
+      ),
+      React.createElement('div', { className:'form-section' },
+        React.createElement('div', { className:'form-label' }, 'Contact'),
+        React.createElement('div', { className:'form-group' },
+          React.createElement('div', { className:'form-row' }, React.createElement('span', { className:'icon' }, '📱'), React.createElement('label', null, 'Mobile'), React.createElement('input', { type:'tel', placeholder:'Primary number', value:phone, onChange:e=>setPhone(e.target.value) })),
+          React.createElement('div', { className:'form-row' }, React.createElement('span', { className:'icon' }, '🆘'), React.createElement('label', null, 'Emergency'), React.createElement('input', { type:'tel', placeholder:'Emergency contact', value:emerg, onChange:e=>setEmerg(e.target.value) }))
+        )
+      ),
+      React.createElement('div', { className:'form-section' },
+        React.createElement('div', { className:'form-label' }, 'Work Details'),
+        React.createElement('div', { className:'form-group' },
+          React.createElement('div', { className:'form-row' }, React.createElement('span', { className:'icon' }, '🏢'), React.createElement('label', null, 'Department'),
+            React.createElement('select', { value:dept, onChange:e=>setDept(e.target.value) },
+              React.createElement('option', { value:'' }, 'Select'),
+              depts.map(d => React.createElement('option', { key:d, value:d }, d))
+            )
+          ),
+          React.createElement('div', { className:'form-row' }, React.createElement('span', { className:'icon' }, '⚙️'), React.createElement('label', null, 'Capabilities'), React.createElement('input', { type:'text', placeholder:'e.g. Welding', value:cap, onChange:e=>setCap(e.target.value) })),
+          React.createElement('div', { className:'form-row' }, React.createElement('span', { className:'icon' }, '₹'), React.createElement('label', null, 'Rate/Hour'), React.createElement('input', { type:'number', placeholder:'e.g. 80', value:slab, onChange:e=>setSlab(e.target.value) }))
+        )
+      ),
+      React.createElement('button', { className:'btn btn-primary', onClick:doSave, disabled:loading },
+        loading ? React.createElement('span', null, React.createElement('span', { className:'spinner' }), 'Saving…') : 'Save & Enter App'
+      )
+    )
+  );
+}
+
+// ── Main App ──────────────────────────────────────────────────
+function App() {
+  const [screen, setScreen] = useState('splash');
+  const [user, setUser] = useState(null);
+  const [activeTab, setActiveTab] = useState('att');
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifs, setNotifs] = useState([]);
+  const [loginMsg, setLoginMsg] = useState(null);
+  const [loginEmail, setLoginEmail] = useState(localStorage.getItem('skmEmail') || '');
+  const unreadCountRef = useRef(0);
+  const notifJsonRef = useRef('');
+  const pauseNotifUntilRef = useRef(0);
+
+  useEffect(() => {
+    setTimeout(() => {
+      gasCall('getCurrentUser', [localStorage.getItem('skmEmail') || ''], (u) => {
+        if (u.success) {
+          localStorage.setItem('skmEmail', u.email);
+          setLoginEmail(u.email);
+          setUser(u);
+          if (!u.profileComplete) setScreen('setup');
+          else { setScreen('app'); loadNotifs(u); }
+        } else if (u.notApproved) {
+          setLoginMsg({ type:'error', text:u.message });
+          setScreen('login');
+        } else {
+          setScreen('login');
+        }
+      }, () => setScreen('login'));
+    }, 2000);
+  }, []);
+
+  useEffect(() => {
+    function pausePolling(){ pauseNotifUntilRef.current = Date.now() + 4000; }
+    window.addEventListener('scroll', pausePolling, true);
+    window.addEventListener('wheel', pausePolling, { passive:true });
+    window.addEventListener('touchstart', pausePolling, { passive:true });
+    window.addEventListener('touchmove', pausePolling, { passive:true });
+    return () => {
+      window.removeEventListener('scroll', pausePolling, true);
+      window.removeEventListener('wheel', pausePolling);
+      window.removeEventListener('touchstart', pausePolling);
+      window.removeEventListener('touchmove', pausePolling);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (screen !== 'app' || !user) return;
+    const interval = setInterval(() => {
+      if (Date.now() < pauseNotifUntilRef.current) return;
+      loadNotifs(user);
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [screen, user]);
+
+  function loadNotifs(u) {
+    gasCall('getMyNotifs', [], (items) => {
+      const list = items || [];
+      const unreadCount = list.filter(n => n.read !== 'YES').length;
+      if (unreadCount > unreadCountRef.current) playNotificationSound();
+      unreadCountRef.current = unreadCount;
+      const nextJson = JSON.stringify(list);
+      if (nextJson !== notifJsonRef.current) {
+        notifJsonRef.current = nextJson;
+        setNotifs(list);
+      }
+      if ((u||user)?.newRating === 'YES') gasCall('clearNewRating', [], ()=>{}, ()=>{});
+    }, ()=>{});
+  }
+
+  function doLogin() {
+    setLoginMsg(null);
+    var email = loginEmail.trim().toLowerCase();
+    if (!email) {
+      setLoginMsg({ type:'error', text:'Enter the approved email added by admin.' });
+      return;
+    }
+    gasCall('getCurrentUser', [email], (u) => {
+      if (u.success) {
+        localStorage.setItem('skmEmail', u.email);
+        setLoginEmail(u.email);
+        setUser(u);
+        if (!u.profileComplete) setScreen('setup');
+        else { setScreen('app'); loadNotifs(u); }
+      } else if (u.notApproved) {
+        setLoginMsg({ type:'error', text:u.message });
+      } else if (u.notSignedIn) {
+        setLoginMsg({ type:'info', text:'Enter the approved email added by admin, then continue.' });
+      } else {
+        setLoginMsg({ type:'info', text:'Please open this app in Chrome while signed into your Google account ('+u.email+').' });
+      }
+    }, (e) => setLoginMsg({ type:'error', text:'Error: '+e.message }));
+  }
+
+  function doLogout() { localStorage.removeItem('skmEmail'); setLoginEmail(''); setUser(null); setScreen('login'); setNotifs([]); }
+
+  function openNotifs() {
+    setNotifOpen(true);
+    if (notifs.some(n => n.read !== 'YES')) {
+      gasCall('markNotifsRead', [], ()=>{ unreadCountRef.current=0; loadNotifs(user); }, ()=>{});
+    }
+  }
+
+  const unreadCount = notifs.filter(n => n.read !== 'YES').length;
+  const tabs = [
+    { id:'att',    icon:'⏱', label:'Today'   },
+    { id:'leave',  icon:'🏖', label:'Leave'   },
+    { id:'req',    icon:'📝', label:'Request' },
+    ...(user?.role !== 'admin' ? [{ id:'adv', icon:'💰', label:'Advance' }] : []),
+    { id:'hist',   icon:'📅', label:'History' },
+    { id:'prof',   icon:'👤', label:'Profile' },
+    ...(user?.role==='admin' ? [{ id:'report', icon:'📊', label:'Report' }, { id:'admin', icon:'🔧', label:'Admin' }] : [])
+  ];
+
+  if (screen === 'splash') return React.createElement('div', { className:'splash' },
+    React.createElement('div', { className:'splash-logo' }, '🏭'),
+    React.createElement('div', { className:'splash-title' }, 'SK Machines'),
+    React.createElement('div', { className:'splash-sub' }, 'Sarvashakthi Rotavator • Salem'),
+    React.createElement('div', { className:'splash-welcome' }, 'Hello All Welcome To Sarvashakthi Rotavator By SK Machines'),
+    React.createElement('div', { className:'splash-conf' }, 'CONFIDENTIAL')
+  );
+
+  if (screen === 'login') return React.createElement('div', { className:'login-wrap' },
+    React.createElement('div', { className:'login-brand' },
+      React.createElement('div', { className:'login-logo' }, '🏭'),
+      React.createElement('h1', null, 'SK Machines'),
+      React.createElement('p', null, 'CONFIDENTIAL STAFF APP')
+    ),
+    React.createElement('div', { className:'login-card' },
+      React.createElement('h2', null, 'Staff Sign In'),
+      React.createElement('p', null, 'Use the approved email added by admin.'),
+      loginMsg && React.createElement('div', { className:'login-msg '+loginMsg.type }, loginMsg.text),
+      React.createElement('input', {
+        className:'inp',
+        type:'email',
+        placeholder:'santhoshhappiness@gmail.com',
+        value:loginEmail,
+        onChange:function(e){ setLoginEmail(e.target.value); },
+        onKeyDown:function(e){ if(e.key === 'Enter') doLogin(); },
+        style:{ marginBottom:14, background:'#fff' }
+      }),
+      React.createElement('button', { className:'google-btn', onClick:doLogin },
+        React.createElement('span', null, 'G'),
+        React.createElement('span', null, 'Continue')
+      )
+    )
+  );
+
+  if (screen === 'setup') return React.createElement(SetupScreen, {
+    user:user,
+    onDone:function(updatedUser){
+      setUser(updatedUser);
+      setScreen('app');
+      loadNotifs(updatedUser);
+    }
+  });
+
+  return React.createElement('div', { className:'main-wrap' },
+    React.createElement('div', { className:'navbar' },
+      React.createElement('div', null,
+        React.createElement('h1', null, 'SK Machines'),
+        React.createElement('div', { className:'navbar-conf' }, 'Confidential'),
+        React.createElement('div', { className:'navbar-meta' },
+          React.createElement(HeaderClock),
+          React.createElement('div', { className:'welcome-flash' }, 'Welcome '+(user?.name || user?.email || 'Staff'))
+        ),
+        user?.role !== 'admin' && user?.remarks ? React.createElement('div', { className:'remark-flash' }, '⭐ '+(user.name||'Staff')+' — "'+user.remarks+'"') : null
+      ),
+      React.createElement('div', { className:'navbar-right' },
+        React.createElement('button', { className:'notif-btn', onClick:openNotifs, title:'Notifications' },
+          '🔔',
+          unreadCount > 0 && React.createElement('span', { className:'notif-dot' })
+        ),
+        React.createElement('button', { className:'logout-btn', onClick:doLogout }, 'Logout')
+      )
+    ),
+    activeTab === 'att' && React.createElement(AttPage, { user:user }),
+    activeTab === 'leave' && React.createElement(LeavePage, { user:user }),
+    activeTab === 'req' && React.createElement(RequestPage, { user:user }),
+    activeTab === 'adv' && user?.role !== 'admin' && React.createElement(AdvancePage, { user:user }),
+    activeTab === 'hist' && React.createElement(HistPage, { user:user }),
+    activeTab === 'prof' && React.createElement(ProfPage, { user:user }),
+    activeTab === 'report' && user?.role === 'admin' && React.createElement(ReportPage, { user:user }),
+    activeTab === 'admin' && user?.role === 'admin' && React.createElement(AdminPage, { user:user }),
+    React.createElement(NotifPanel, { open:notifOpen, onClose:function(){setNotifOpen(false);}, notifs:notifs }),
+    React.createElement('div', { className:'tabbar' },
+      tabs.map(function(t){
+        return React.createElement('button', {
+          key:t.id,
+          className:'tab-item'+(activeTab===t.id?' active':''),
+          onClick:function(){setActiveTab(t.id);}
+        },
+          React.createElement('div', { className:'t-icon' }, t.icon),
+          React.createElement('div', { className:'t-label' }, t.label)
+        );
+      })
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+</script>
+<div id="globalToast" class="toast"></div>
+</body>
+</html>
