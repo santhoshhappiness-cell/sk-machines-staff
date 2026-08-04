@@ -13,7 +13,7 @@ workflows:
           echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
       - name: Build debug APK
         script: |
-          unset JAVA_TOOL_OPTIONS
-          ./gradlew assembleDebug --no-daemon
+          export JAVA_TOOL_OPTIONS=""
+          ./gradlew assembleDebug -Dorg.gradle.jvmargs="-Xmx2048m" --no-daemon
     artifacts:
       - build/outputs/apk/debug/*.apk
