@@ -1,7 +1,7 @@
 package com.santhosh.dailyactivitytracker.notification
 
 import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.app.NotificationManager as SystemNotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -17,13 +17,13 @@ class NotificationManager(private val context: Context) {
 
     private fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as SystemNotificationManager
 
             // Task reminder channel
             val reminderChannel = NotificationChannel(
                 CHANNEL_TASK_REMINDER,
                 "Task Reminders",
-                NotificationManager.IMPORTANCE_HIGH
+                SystemNotificationManager.IMPORTANCE_HIGH
             ).apply {
                 description = "Notifications for task reminders"
                 enableVibration(true)
@@ -34,7 +34,7 @@ class NotificationManager(private val context: Context) {
             val completedChannel = NotificationChannel(
                 CHANNEL_TASK_COMPLETED,
                 "Task Completed",
-                NotificationManager.IMPORTANCE_DEFAULT
+                SystemNotificationManager.IMPORTANCE_DEFAULT
             ).apply {
                 description = "Notifications when tasks are completed"
             }
@@ -44,7 +44,7 @@ class NotificationManager(private val context: Context) {
             val summaryChannel = NotificationChannel(
                 CHANNEL_DAILY_SUMMARY,
                 "Daily Summary",
-                NotificationManager.IMPORTANCE_LOW
+                SystemNotificationManager.IMPORTANCE_LOW
             ).apply {
                 description = "Daily activity summary"
             }
@@ -61,7 +61,7 @@ class NotificationManager(private val context: Context) {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
 
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as SystemNotificationManager
         notificationManager.notify(NOTIFICATION_ID_TASK_ADDED, notification)
     }
 
@@ -74,7 +74,7 @@ class NotificationManager(private val context: Context) {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
 
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as SystemNotificationManager
         notificationManager.notify(NOTIFICATION_ID_TASK_COMPLETED, notification)
     }
 
@@ -89,7 +89,7 @@ class NotificationManager(private val context: Context) {
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
 
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as SystemNotificationManager
         notificationManager.notify(NOTIFICATION_ID_DAILY_SUMMARY, notification)
     }
 

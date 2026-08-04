@@ -11,9 +11,16 @@ workflows:
       - name: Set up local.properties
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+      - name: Install Android SDK 34
+        script: |
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          sdkmanager "platforms;android-34" "build-tools;34.0.0" || true
       - name: Build debug APK
         script: |
-          export JAVA_TOOL_OPTIONS=""
-          ./gradlew assembleDebug -Dorg.gradle.jvmargs="-Xmx2048m" --no-daemon
+          # Android Gradle Plugin 8.x requires JDK 17.
+          export JAVA_HOME=$(/usr/libexec/java_home -v 17 2>/dev/null || echo "$JAVA_HOME")
+          export PATH="$JAVA_HOME/bin:$PATH"
+          java -version
+          ./gradlew assembleDebug --no-daemon --stacktrace
     artifacts:
-      - build/outputs/apk/debug/*.apk
+      - app/build/outputs/apk/**/*.apk
