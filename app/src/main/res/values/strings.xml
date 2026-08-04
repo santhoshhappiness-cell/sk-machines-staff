@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Daily Activity Tracker</string>
+    <string name="add_task">Add Task</string>
+    <string name="complete_task">Complete Task</string>
+    <string name="delete_task">Delete Task</string>
+    <string name="task_title">Task Title</string>
+    <string name="task_description">Task Description</string>
+    <string name="task_category">Category</string>
+    <string name="task_priority">Priority</string>
+    <string name="active_tasks">Active Tasks</string>
+    <string name="completed_tasks">Completed Tasks</string>
+    <string name="no_tasks">No tasks yet. Add one to get started!</string>
+    <string name="task_added">Task Added</string>
+    <string name="task_completed">Task Completed</string>
+    <string name="daily_summary">Daily Summary</string>
+</resources>
